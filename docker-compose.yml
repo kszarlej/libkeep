@@ -1,0 +1,33 @@
+version: '2'
+services:
+  db:
+    image: postgres
+    container_name: postgres
+    logging:
+      driver: syslog
+      options:
+        syslog-address: "udp://127.0.0.1:5514"
+        tag: "postgres:"
+  syslog:
+    build:
+      context: .
+      dockerfile: Dockerfile-syslog
+    container_name: syslog
+    volumes:
+      - ./log:/var/log
+    ports:
+      - "5514:514/udp"
+  app:
+    build: .
+    command: python hello.py
+    container_name: app
+    ports:
+      - "5000:5000"
+    depends_on:
+      - db
+      - syslog
+    logging:
+      driver: syslog
+      options:
+        syslog-address: "udp://127.0.0.1:5514"
+        tag: "app:"

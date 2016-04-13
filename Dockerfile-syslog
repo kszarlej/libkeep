@@ -1,0 +1,2 @@
+FROM voxxit/rsyslog:latest
+ADD misc/30-libkeep-syslog.conf /etc/rsyslog.d/
