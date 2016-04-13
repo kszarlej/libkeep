@@ -19,7 +19,7 @@ services:
       - "5514:514/udp"
   app:
     build: .
-    command: python hello.py
+    command: python run.py
     container_name: app
     ports:
       - "5000:5000"
