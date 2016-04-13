@@ -8,6 +8,9 @@ services:
       options:
         syslog-address: "udp://127.0.0.1:5514"
         tag: "postgres:"
+    environment:
+      POSTGRES_PASSWORD: password
+      POSTGRES_USER: libkeep
   syslog:
     build:
       context: .
