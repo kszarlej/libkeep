@@ -11,4 +11,4 @@ api = Api(app)
 
 if __name__ == '__main__':
     init_routes(api)
-    app.run(debug=settings.DEBUG)
+    app.run(debug=settings.DEBUG,host='0.0.0.0')
