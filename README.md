@@ -1,8 +1,6 @@
-# libkeep
+# libkeep (A university project)
 
-## This is just a university project.
-
-### Libkeep is an application for managing&maintaining library (with books ofc).
+### Libkeep is an application for managing&maintaining library (with books ofc). 
 
 ### Needed packages
 
