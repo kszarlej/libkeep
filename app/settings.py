@@ -1,7 +1,6 @@
 import os
 
-
-DEBUG = bool(int(os.environ['DEBUG']))  # value '0' or '1'
+DEBUG = bool(os.getenv('DEBUG', 0))  # default false
 APP_NAME = 'library'
 
 ROUTES = [
