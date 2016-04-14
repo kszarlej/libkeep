@@ -11,15 +11,17 @@ services:
     environment:
       POSTGRES_PASSWORD: password
       POSTGRES_USER: libkeep
+    depends_on:
+      - syslog
   syslog:
     build:
       context: .
       dockerfile: Dockerfile-syslog
     container_name: syslog
+    ports:
+      - "514:5514"
     volumes:
       - ./log:/var/log
-    ports:
-      - "5514:514/udp"
   app:
     build: .
     command: python run.py
