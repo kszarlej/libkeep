@@ -1,4 +1,0 @@
-Flask
-flask-restful
-psycopg2
-sqlalchemy

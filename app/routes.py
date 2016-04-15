@@ -5,5 +5,5 @@ import settings
 
 def init_routes(api):
     # TODO split and import class
-    for route, controller in settings.ROUTES:
-        api.add_resource(import_module(controller), route)
+    for route, path, Controller in settings.ROUTES:
+        api.add_resource(getattr(import_module(path), Controller), route)
