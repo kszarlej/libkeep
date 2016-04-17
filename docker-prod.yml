@@ -1,0 +1,22 @@
+version: '2'
+services:
+
+  db:
+    extends:
+      file: common.yml
+      service: db
+    depends_on:
+      - syslog
+
+  syslog:
+    extends:
+      file: common.yml
+      service: syslog
+
+  app:
+    extends:
+      file: common.yml
+      service: app
+    depends_on:
+      - db
+      - syslog
