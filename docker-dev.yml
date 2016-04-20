@@ -23,3 +23,8 @@ services:
       PORT: 5000
     volumes:
       - ./app:/app
+    depends_on:
+      - db
+      - syslog
+    links:
+      - db

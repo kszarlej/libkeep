@@ -27,3 +27,24 @@
 * run `docker-compose up -d`
 * go to `[docker-machine ip default]:5000`
 * check logs under `./log` directory
+
+
+### Testing
+
+* run `docker-compose run app test`
+
+it will run `py.test` inside of the container, you can pass
+`--pdb` to enable debugger on test fail
+
+* you can use flask fixutes (http://pytest-flask.readthedocs.org/en/latest/features.html#fixtures)
+* if you need a database test you can use `db` fixture. It will create `sqlite` database
+and after test end will drop it
+
+
+### Installing dependencies
+
+* run `docker-compose run app pip "package_name"`
+
+it will install "package_name" to your `virtualenv` (if `DEBUG` is `True`)
+or to the global site-package. You can pass `--save` or `--save-dev`
+to save "package_name" inside of requirements file

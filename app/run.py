@@ -1,14 +1,17 @@
-from flask import Flask
-from flask_restful import Api
-
-import settings
+from project import app
 from routes import init_routes
 
 
-app = Flask(settings.APP_NAME)
-api = Api(app)
+def get_app():
+    init_routes()
+    return app
+
+
+def start_app():
+    get_app().run(host=app.config['HOST'],
+                  port=app.config['PORT'],
+                  debug=app.config['DEBUG'])
 
 
 if __name__ == '__main__':
-    init_routes(api)
-    app.run(host=settings.HOST, port=settings.PORT, debug=settings.DEBUG)
+    start_app()

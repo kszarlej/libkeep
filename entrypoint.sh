@@ -19,31 +19,51 @@ function install {
       virtualenv $VIRT_DIR
   fi
 
-  ${PIP_BIN} install -r ${APP_DIR}/requirements.txt --upgrade "${@:2}"
+  ${PIP_BIN} install -r ${APP_DIR}/requirements.txt --upgrade "${@:1}"
 }
 
 function run {
-  ${PYTHON_BIN} ${APP_DIR}/run.py "${@:2}"
+  ${PYTHON_BIN} ${APP_DIR}/run.py "${@:1}"
 }
 
 function test_ {
-  echo "testing"
+  ${VIRT_DIR}/bin/py.test "${@:1}"
+}
+
+function pip {
+  ${PIP_BIN} install "$1"
+
+  REQUIREMENTS_FILE=''
+  if [ "$2" == "--save" ]
+  then
+    local REQUIREMENTS_FILE=requirements.txt
+  elif [ "$2" == "--save-dev" ]
+  then
+    local REQUIREMENTS_FILE=requirements.dev.txt
+  fi
+
+  local INSTALLED=`${PIP_BIN} freeze | grep "$1"`
+  if [ -n "$REQUIREMENTS_FILE" ] && ! grep -q "$INSTALLED" "$REQUIREMENTS_FILE"
+  then
+    echo $INSTALLED >> ${APP_DIR}/${REQUIREMENTS_FILE}
+    echo "requirements saved in ${REQUIREMENTS_FILE} file"
+  fi
 }
 
 
 case "$1" in
 
 'install')
-  install
+  install "${@:2}"
   ;;
 'test')
-  test_
-  ;;
-'print')
-  echo $DEBUG
+  test_ "${@:2}"
   ;;
 'run')
-  run
+  run "${@:2}"
+  ;;
+'pip')
+  pip "$2" "$3"
   ;;
 *)
   "${@:1}"

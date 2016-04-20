@@ -1,6 +1,7 @@
 FROM python:latest
 
 ENV APP_DIR /app
+ENV PYTHONPATH /app
 
 RUN mkdir ${APP_DIR}
 WORKDIR ${APP_DIR}
