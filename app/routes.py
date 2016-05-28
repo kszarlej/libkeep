@@ -1,9 +1,15 @@
 from importlib import import_module
 
-import settings
+from project import api
 
 
-def init_routes(api):
-    # TODO split and import class
-    for route, controller in settings.ROUTES:
-        api.add_resource(import_module(controller), route)
+ROUTES = [
+    ('/', 'hello.views', 'Hello'),
+]
+
+
+def init_routes():
+    for route, path, Controller in ROUTES:
+        api.add_resource(
+            getattr(import_module('project.{}'.format(path)), Controller),
+            route)

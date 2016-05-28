@@ -1,0 +1,30 @@
+version: '2'
+services:
+
+  db:
+    extends:
+      file: common.yml
+      service: db
+    depends_on:
+      - syslog
+
+  syslog:
+    extends:
+      file: common.yml
+      service: syslog
+
+  app:
+    extends:
+      file: common.yml
+      service: app
+    environment:
+      DEBUG: 1
+      HOST: '0.0.0.0'
+      PORT: 5000
+    volumes:
+      - ./app:/app
+    depends_on:
+      - db
+      - syslog
+    links:
+      - db
