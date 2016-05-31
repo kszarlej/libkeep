@@ -12,4 +12,4 @@ ADD ./app ${APP_DIR}
 RUN pip install --upgrade pip
 
 ENTRYPOINT ["/entrypoint.sh"]
-CMD /entrypoint.sh install && /entrypoint.sh run
+CMD ["install_and_run"]

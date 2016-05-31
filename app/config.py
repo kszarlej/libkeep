@@ -4,6 +4,8 @@ DEBUG = bool(os.getenv('DEBUG', 0))  # default false
 HOST = os.environ['HOST']
 PORT = int(os.environ['PORT'])
 
+JWT_SECRET = 'secret'
+
 SQLALCHEMY_DATABASE_URI = \
     'postgresql://{user}:{password}@{host}/{name}'.format(
         user=os.environ['DB_USER'],

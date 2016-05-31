@@ -19,15 +19,25 @@ function install {
       virtualenv $VIRT_DIR
   fi
 
-  ${PIP_BIN} install -r ${APP_DIR}/requirements.txt --upgrade "${@:1}"
+  ${PIP_BIN} install -r ${APP_DIR}/requirements.txt --upgrade $@
 }
 
 function run {
-  ${PYTHON_BIN} ${APP_DIR}/run.py "${@:1}"
+  ${PYTHON_BIN} ${APP_DIR}/run.py $@
 }
 
-function test_ {
-  ${VIRT_DIR}/bin/py.test "${@:1}"
+function install_and_run {
+  install
+  run
+}
+
+function test_once {
+  ${VIRT_DIR}/bin/py.test $@
+}
+
+function test_watch {
+  source ${VIRT_DIR}/bin/activate
+  ptw $@
 }
 
 function pip {
@@ -51,21 +61,4 @@ function pip {
 }
 
 
-case "$1" in
-
-'install')
-  install "${@:2}"
-  ;;
-'test')
-  test_ "${@:2}"
-  ;;
-'run')
-  run "${@:2}"
-  ;;
-'pip')
-  pip "$2" "$3"
-  ;;
-*)
-  "${@:1}"
-  ;;
-esac
+$@

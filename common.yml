@@ -17,9 +17,9 @@ services:
     build:
       context: .
       dockerfile: Dockerfile-syslog
-    container_name: syslog
+    container_name: syslog_to
     ports:
-      - "514:5514/udp"
+      - "5514:514/udp"
     volumes:
       - ./log:/var/log
 
