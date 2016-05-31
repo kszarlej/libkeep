@@ -1,7 +1,7 @@
 from pytest import fixture, mark
 
 from run import get_app
-from project.db import db as project_db, User
+from project.db import db as project_db, User, Book, Author, Category
 from project.utils.test import TestRequest
 
 
@@ -12,8 +12,9 @@ def app():
 
 @fixture
 @mark.options(SQLALCHEMY_DATABASE_URI="sqlite://")
-def db(request):
-    project_db.create_all()
+def db(app, request):
+    with app.app_context():
+        project_db.create_all()
 
     def fin():
         project_db.session.remove()
@@ -35,7 +36,7 @@ def parser_failer(Request, client, mocker):
 
         data = parser.parse_args(req=Request(data))
 
-        mock_abort.assert_called_once_with(400, message=expected_errors)
+        mock_abort.assert_called_with(400, message=expected_errors)
 
     return wrapper
 
@@ -51,3 +52,53 @@ def user(db):
     db.session.commit()
 
     return user
+
+
+@fixture
+def admin(db):
+    user = User()
+    user.email = 'admin@example.com'
+    user.password = 'test_password'
+    user.secure_password()
+    user.is_admin = True
+
+    db.session.add(user)
+    db.session.commit()
+
+    return user
+
+
+@fixture
+def author(db):
+    author = Author()
+    author.name = 'Mark Twain'
+
+    db.session.add(author)
+    db.session.commit()
+
+    return author
+
+
+@fixture
+def category(db):
+    category = Category()
+    category.name = 'Fiction'
+
+    db.session.add(category)
+    db.session.commit()
+
+    return category
+
+
+@fixture
+def book(db, author, category):
+    book = Book()
+    book.isbn = '123-1-1234-123-1'
+    book.title = 'awesome book'
+    book.author = author
+    book.category = category
+
+    db.session.add(book)
+    db.session.commit()
+
+    return book

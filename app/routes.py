@@ -8,6 +8,11 @@ ROUTES = {
         'register': ('/user/register', 'user.controllers', 'Register'),
         'login': ('/user/login', 'user.controllers', 'Login'),
     },
+    'books': {
+        'list': ('/books', 'book.controllers', 'List'),
+        'details': ('/books/<string:isbn>', 'book.controllers', 'Detail'),
+        'loan': ('/books/<string:isbn>/loan', 'book.controllers', 'Loan'),
+    },
 }
 
 

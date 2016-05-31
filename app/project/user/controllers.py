@@ -1,4 +1,4 @@
-from flask_restful import Resource, reqparse
+from flask_restful import Resource
 
 from project.db import db, User
 from project.utils.auth import get_token
@@ -9,7 +9,7 @@ from .parsers import RegisterParser, LoginParser
 class Register(Resource):
 
     def post(self):
-        parser = RegisterParser()
+        parser = RegisterParser(bundle_errors=True)
         args = parser.parse_args()
 
         user = User()
@@ -26,7 +26,7 @@ class Register(Resource):
 class Login(Resource):
 
     def post(self):
-        parser = RegisterParser()
+        parser = LoginParser()
         args = parser.parse_args()
 
         user = User.query.filter_by(email=args['email']).first()
