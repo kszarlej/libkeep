@@ -21,6 +21,8 @@ services:
       DEBUG: 1
       HOST: '0.0.0.0'
       PORT: 5000
+      ADMIN_EMAIL: admin@local
+      ADMIN_PASSWORD: admin
     volumes:
       - ./app:/app
     depends_on:

@@ -3,6 +3,8 @@ import os
 DEBUG = bool(os.getenv('DEBUG', 0))  # default false
 HOST = os.environ['HOST']
 PORT = int(os.environ['PORT'])
+ADMIN_EMAIL = os.environ['ADMIN_EMAIL']
+ADMIN_PASSWORD = os.environ['ADMIN_PASSWORD']
 
 JWT_SECRET = 'secret'
 
