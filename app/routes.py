@@ -12,6 +12,8 @@ ROUTES = {
         'list': ('/books', 'book.controllers', 'List'),
         'details': ('/books/<string:isbn>', 'book.controllers', 'Detail'),
         'loan': ('/books/<string:isbn>/loan', 'book.controllers', 'Loan'),
+        'return': ('/books/<string:isbn>/return', 'book.controllers',
+                   'Return'),
     },
 }
 

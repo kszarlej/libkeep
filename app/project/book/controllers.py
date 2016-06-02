@@ -1,6 +1,6 @@
 from flask_restful import Resource
 
-from project.db import db, Book, Loan as LoanModel
+from project.db import db, Book, Loan as LoanModel, User
 from project.utils.auth import require_admin
 from .parsers import BookParser, LoanParser
 
@@ -67,3 +67,31 @@ class Loan(Resource):
         db.session.commit()
 
         return {}, 201
+
+
+class Return(Resource):
+
+    @require_admin
+    def post(self, isbn, user_data):
+        parser = LoanParser(bundle_errors=True)
+        args = parser.parse_args()
+
+        book = Book.query.filter_by(isbn=isbn).first()
+        if not book:
+            return {'message': {'isbn': 'Book does not exist'}}, 400
+
+        loan = LoanModel.query \
+            .join(LoanModel.book) \
+            .join(LoanModel.user) \
+            .filter(Book.isbn == isbn) \
+            .filter(User.id == args['user'].id) \
+            .first()
+        if not loan:
+            return (
+                {'message': {'loan': 'This user has not loan this book'}}, 400
+            )
+
+        db.session.delete(loan)
+        db.session.commit()
+
+        return {}, 200

@@ -225,3 +225,43 @@ def test_loan_no_more_copies(client, user, admin, book, db):
     assert response.status_code == 400
     assert response.json == {'message': {'book': 'No more free copies'}}
     assert len(book.loans) == 1
+
+
+@mark.integration
+def test_return_book(client, user, admin, book, db):
+    post_book = post(endpoint='books:return', isbn=book.isbn)
+    test_data = {'user': user.id}
+
+    loan = Loan()
+    loan.book = book
+    loan.user = user
+    db.session.add(loan)
+    db.session.commit()
+
+    response = post_book(client, data=test_data, user=admin)
+
+    assert response.status_code == 200
+    assert response.json == {}
+    assert len(book.loans) == 0
+
+
+@mark.integration
+def test_return_user_has_not_loan_this_book(client, user, admin, book, db):
+    post_book = post(endpoint='books:return', isbn=book.isbn)
+    test_data = {'user': user.id}
+
+    loan = Loan()
+    loan.book = book
+    loan.user = admin
+    db.session.add(loan)
+    db.session.commit()
+
+    response = post_book(client, data=test_data, user=admin)
+
+    assert response.status_code == 400
+    assert response.json == {
+        'message': {
+            'loan': 'This user has not loan this book'
+        }
+    }
+    assert len(book.loans) == 1
