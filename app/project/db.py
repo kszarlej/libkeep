@@ -26,6 +26,13 @@ class User(db.Model):
         return pwd_context.verify(password, self.password)
 
     @property
+    def json(self):
+        return {
+            'email': self.email,
+            'admin': self.is_admin
+        }
+
+    @property
     def jwt_dict(self):
         return {
             'id': self.id,
@@ -94,7 +101,21 @@ class Author(db.Model):
     __tablename__ = 'author'
 
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(1024), unique=True)
+    name = db.Column(db.String(1024), unique=False)
+    surname = db.Column(db.String(1024), unique=False)
+    slug = db.Column(db.String(1024), unique=True)
+    city = db.Column(db.String(1024), unique=False)
+    www = db.Column(db.String(1024), unique=False)
+
+    @property
+    def json(self):
+        return {
+            'name': self.name,
+            'surname': self.surname,
+            'city': self.city,
+            'www': self.www if self.www else None,
+            }
 
     def __str__(self):
-        return self.name
+        author = "{0} {1}".format(self.name, self.surname)
+        return author
