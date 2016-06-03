@@ -1,6 +1,6 @@
 from flask_sqlalchemy import SQLAlchemy
 from passlib.apps import custom_app_context as pwd_context
-
+from sqlalchemy.event import listen
 
 db = SQLAlchemy()
 
@@ -24,6 +24,13 @@ class User(db.Model):
 
     def verify_password(self, password):
         return pwd_context.verify(password, self.password)
+
+    @property
+    def json(self):
+        return {
+            'email': self.email,
+            'admin': self.is_admin
+        }
 
     @property
     def jwt_dict(self):
@@ -88,13 +95,34 @@ class Category(db.Model):
     def __str__(self):
         return self.name
 
+def slug_listener(mapper, connect, target):
+    target.generate_slug()
 
 class Author(db.Model):
 
     __tablename__ = 'author'
 
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(1024), unique=True)
+    name = db.Column(db.String(1024), unique=False)
+    surname = db.Column(db.String(1024), unique=False)
+    slug = db.Column(db.String(1024), unique=True)
+    city = db.Column(db.String(1024), unique=False)
+    www = db.Column(db.String(1024), unique=False)
+
+    def generate_slug(self):
+        self.slug = '{}-{}'.format(self.name.lower(), self.surname.lower())
+
+    @property
+    def json(self):
+        return {
+            'name': self.name,
+            'surname': self.surname,
+            'city': self.city,
+            'www': self.www if self.www else None,
+            }
 
     def __str__(self):
-        return self.name
+        author = "{0} {1}".format(self.name, self.surname)
+        return author
+
+listen(Author, 'before_insert', slug_listener)

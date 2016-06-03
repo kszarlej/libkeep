@@ -12,6 +12,8 @@ services:
     environment:
       POSTGRES_PASSWORD: password
       POSTGRES_USER: libkeep
+    ports:
+      - "5432:5432"
 
   syslog:
     build:
