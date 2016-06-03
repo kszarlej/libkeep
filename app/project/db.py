@@ -1,6 +1,6 @@
 from flask_sqlalchemy import SQLAlchemy
 from passlib.apps import custom_app_context as pwd_context
-from sqlalchemy import event
+from sqlalchemy.event import listen
 
 db = SQLAlchemy()
 
@@ -15,9 +15,6 @@ class User(db.Model):
     is_admin = db.Column(db.Boolean, default=False)
 
     loans = db.relationship('Loan', back_populates='user')
-
-    def slug_listener(mapper, connection, target):
-        target.slug = '{}-{}'.format(target.name, target.surname)
 
     def __str__(self):
         return str(self.email)
@@ -42,8 +39,6 @@ class User(db.Model):
             'email': self.email,
             'is_admin': self.is_admin,
         }
-
-    event.listen(Author, 'before_insert', slug_listener)
 
 
 class Book(db.Model):
@@ -100,6 +95,8 @@ class Category(db.Model):
     def __str__(self):
         return self.name
 
+def slug_listener(mapper, connect, target):
+    target.generate_slug()
 
 class Author(db.Model):
 
@@ -111,6 +108,9 @@ class Author(db.Model):
     slug = db.Column(db.String(1024), unique=True)
     city = db.Column(db.String(1024), unique=False)
     www = db.Column(db.String(1024), unique=False)
+
+    def generate_slug(self):
+        self.slug = '{}-{}'.format(self.name.lower(), self.surname.lower())
 
     @property
     def json(self):
@@ -124,3 +124,5 @@ class Author(db.Model):
     def __str__(self):
         author = "{0} {1}".format(self.name, self.surname)
         return author
+
+listen(Author, 'before_insert', slug_listener)
