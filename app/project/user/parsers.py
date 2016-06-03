@@ -8,11 +8,6 @@ class RegisterParser(Parser):
         Argument('password', required=True, help='Password is required'),
     )
 
-class DeleteParser(Parser):
-
-    arguments = (
-        Argument('email', required=True, help='Email is required'),
-    )
 
 class LoginParser(RegisterParser):
     pass
