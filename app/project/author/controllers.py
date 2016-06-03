@@ -3,22 +3,18 @@ from flask import request
 
 from project.db import db, Author, Book
 from project.utils.auth import require_admin
-from .parsers import AuthorAddParser, AuthorParser
+from .parsers import AuthorParser
 from sqlalchemy.exc import IntegrityError
-from sqlalchemy import event
 from project.utils.status import return_error, return_ok
 
 class List(Resource):
-
-    def slug_listener(mapper, connection, target):
-        target.slug = '{}-{}'.format(target.name, target.surname)
 
     def get(self, user_data):
         return [a.json for a in Author.query.all()]
 
     @require_admin
     def post(self, user_data):
-        parser = AuthorAddParser(bundle_errors=True)
+        parser = AuthorParser(bundle_errors=True)
         args = parser.parse_args()
 
         author = Author()
@@ -34,9 +30,6 @@ class List(Resource):
             return return_error(err, 400)
         else:
             return return_ok()
-
-    event.listen(Author, 'before_insert', slug_listener)
-
 
 class Return(Resource):
 
@@ -55,8 +48,5 @@ class Return(Resource):
 class AuthorBooks(Resource):
 
     def get(self, id):
-        parser = AuthorParser(bundle_errors=True)
-        args = parser.parse_args()
         books = Book.query.filter_by(author_id=id)
-
         return [b.json for b in books]
