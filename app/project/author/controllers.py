@@ -7,6 +7,7 @@ from .parsers import AuthorParser
 from sqlalchemy.exc import IntegrityError
 from project.utils.status import return_error, return_ok
 
+
 class List(Resource):
 
     def get(self, user_data):
@@ -31,6 +32,7 @@ class List(Resource):
         else:
             return return_ok()
 
+
 class Return(Resource):
 
     @require_admin
@@ -44,6 +46,7 @@ class Return(Resource):
             return return_error(err, 400)
         else:
             return return_ok()
+
 
 class AuthorBooks(Resource):
 

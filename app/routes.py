@@ -20,7 +20,8 @@ ROUTES = {
     'authors': {
         'author': ('/author', 'author.controllers', 'List'),
         'delete': ('/author/<int:id>', 'author.controllers', 'Return'),
-        'authorBooks': ('/author/<int:id>/books', 'author.controllers', 'AuthorBooks'),
+        'authorBooks': ('/author/<int:id>/books', 'author.controllers',
+                        'AuthorBooks'),
     }
 }
 

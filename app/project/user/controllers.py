@@ -7,6 +7,7 @@ from project.utils.status import return_error, return_ok
 
 from .parsers import RegisterParser, LoginParser
 
+
 class List(Resource):
 
     @require_admin
@@ -29,6 +30,7 @@ class Register(Resource):
         db.session.commit()
 
         return return_ok()
+
 
 class Return(Resource):
 

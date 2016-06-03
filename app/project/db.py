@@ -95,8 +95,10 @@ class Category(db.Model):
     def __str__(self):
         return self.name
 
+
 def slug_listener(mapper, connect, target):
     target.generate_slug()
+
 
 class Author(db.Model):
 
