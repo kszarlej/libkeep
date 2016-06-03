@@ -1,6 +1,6 @@
 from flask_sqlalchemy import SQLAlchemy
 from passlib.apps import custom_app_context as pwd_context
-
+from sqlalchemy import event
 
 db = SQLAlchemy()
 
@@ -15,6 +15,9 @@ class User(db.Model):
     is_admin = db.Column(db.Boolean, default=False)
 
     loans = db.relationship('Loan', back_populates='user')
+
+    def slug_listener(mapper, connection, target):
+        target.slug = '{}-{}'.format(target.name, target.surname)
 
     def __str__(self):
         return str(self.email)
@@ -39,6 +42,8 @@ class User(db.Model):
             'email': self.email,
             'is_admin': self.is_admin,
         }
+
+    event.listen(Author, 'before_insert', slug_listener)
 
 
 class Book(db.Model):

@@ -5,7 +5,7 @@ from project.utils.auth import get_token, require_admin
 from sqlalchemy.exc import IntegrityError
 from project.utils.status import return_error, return_ok
 
-from .parsers import RegisterParser, LoginParser, DeleteParser
+from .parsers import RegisterParser, LoginParser
 
 class List(Resource):
 
