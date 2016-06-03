@@ -18,8 +18,6 @@ class List(Resource):
 
     @require_admin
     def post(self, user_data):
-
-
         parser = AuthorAddParser(bundle_errors=True)
         args = parser.parse_args()
 
@@ -44,7 +42,6 @@ class Return(Resource):
 
     @require_admin
     def delete(self, id, user_data):
-
         author = Author.query.filter_by(id=id).first()
         db.session.delete(author)
 
