@@ -7,7 +7,7 @@ ROUTES = {
     'user': {
         'register': ('/user/register', 'user.controllers', 'Register'),
         'login': ('/user/login', 'user.controllers', 'Login'),
-        'delete': ('/user/delete', 'user.controllers', 'Delete'),
+        'delete': ('/user/<int:id>', 'user.controllers', 'Return'),
         'list': ('/user/list', 'user.controllers', 'List'),
     },
     'books': {
