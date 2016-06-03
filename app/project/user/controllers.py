@@ -26,7 +26,7 @@ class Register(Resource):
         db.session.add(user)
         db.session.commit()
 
-        return {'status': 'ok'}
+        return {'status': 'ok'}, 201
 
 class Delete(Resource):
 
@@ -48,7 +48,7 @@ class Delete(Resource):
 
         db.session.delete(user)
         db.session.commit()
-        return {'status': 'ok'}
+        return {'status': 'ok'}, 201
 
 
 class Login(Resource):

@@ -1,15 +1,16 @@
 from flask_restful import Resource
+from flask import request
 
 from project.db import db, Author, Book
 from project.utils.auth import require_admin
 from .parsers import AuthorAddParser, AuthorParser
+from sqlalchemy.exc import IntegrityError
+from project.utils.status import return_error, return_ok
 
 class List(Resource):
 
     def get(self, user_data):
         return [a.json for a in Author.query.all()]
-
-class Add(Resource):
 
     @require_admin
     def post(self, user_data):
@@ -22,51 +23,35 @@ class Add(Resource):
         author.www = args['www']
         author.slug = "{0}-{1}".format(args['name'].lower(), args['surname'].lower())
 
-        test = Author.query.filter_by(slug=author.slug).first()
-
-        if test:
-            return {
-                'status': 'error',
-                'message': {
-                    'default': 'This author already exists'
-                }
-            }, 400
-
         db.session.add(author)
-        db.session.commit()
 
-        return {'status': 'ok'}
+        try:
+            db.session.commit()
+        except IntegrityError as err:
+            return return_error(err, 400)
+        else:
+            return return_ok()
 
-class Delete(Resource):
+class Return(Resource):
 
     @require_admin
-    def post(self, user_data):
-        parser = AuthorParser(bundle_errors=True)
-        args = parser.parse_args()
-
-        slug = "{0}-{1}".format(args['name'].lower(), args['surname'].lower())
-        author = Author.query.filter_by(slug=slug).first()
-
-        if not author:
-            return {
-                'status': 'error',
-                'message': {
-                    'default': 'No such author'
-                }
-            }, 400
-
+    def delete(self, id, user_data):
+        
+        author = Author.query.filter_by(id=id).first()
         db.session.delete(author)
-        db.session.commit()
-        return {'status': 'ok'}
 
-class GetAuthorBooks(Resource):
+        try:
+            db.session.commit()
+        except IntegrityError as err:
+            return return_error(err, 400)
+        else:
+            return return_ok()
 
-    def post(self, user_data):
+class AuthorBooks(Resource):
+
+    def get(self, id):
         parser = AuthorParser(bundle_errors=True)
         args = parser.parse_args()
-
-        slug = "{0}-{1}".format(args['name'].lower(), args['surname'].lower())
-        author_id = Author.query.filter_by(slug=slug).first().id
-        books = Book.query.filter_by(author_id=author_id)
+        books = Book.query.filter_by(author_id=id)
 
         return [b.json for b in books]

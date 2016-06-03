@@ -16,10 +16,9 @@ ROUTES = {
         'loan': ('/books/<string:isbn>/loan', 'book.controllers', 'Loan'),
     },
     'authors': {
-        'list': ('/author/list', 'author.controllers', 'List'),
-        'add': ('/author/add', 'author.controllers', 'Add'),
-        'delete': ('/author/delete', 'author.controllers', 'Delete'),
-        'authorBooks': ('/author/getbooks', 'author.controllers', 'GetAuthorBooks'),
+        'author': ('/author', 'author.controllers', 'List'),
+        'delete': ('/author/<int:id>', 'author.controllers', 'Return'),
+        'authorBooks': ('/author/<int:id>/books', 'author.controllers', 'AuthorBooks'),
     }
 }
 
