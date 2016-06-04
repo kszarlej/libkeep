@@ -17,6 +17,12 @@ services:
     extends:
       file: common.yml
       service: app
+    environment:
+      DEBUG: 0
+      HOST: '0.0.0.0'
+      PORT: 5000
+      ADMIN_EMAIL: 'libkeep@gmail.com'
+      ADMIN_PASSWORD: 'VwKWCcCJWrbyjjkJu9uw'
     depends_on:
       - db
       - syslog
